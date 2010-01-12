@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="net_alchim31_yascaladt_editor.SimpleScalaEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            default="true"
+            extensions="scala"
+            icon="icons/yascala.png"
+            id="net.alchim31.yascaladt.editor.SimpleScalaEditor"
+            name="Simple Scala Editor">
+      </editor>
+   </extension>
+   <extension
+         id="net.alchim31.yascaladt.markers.CompilerPatternMatcher"
+         name="CompilerPatternMatcher"
+         point="org.eclipse.ui.console.consolePatternMatchListeners">
+      <consolePatternMatchListener
+            class="net_alchim31_yascaladt_markers.CompilerPatternMatcher"
+            id="net.alchim31.yascaladt.markers.CompilerPatternMatcher"
+            regex=".*(error|warning|info|\^|symbol|location|found|required|missing).*">
+         <enablement></enablement>
+      </consolePatternMatchListener>
+   </extension>
+   <extension
+         id="net.alchim31.yascaladt.markers.Problem"
+         name="YaScalaDT Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="false">
+      </persistent>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="net_alchim31_yascaladt_preferences.Preferences"
+            id="net.alchim31.yascaladt.preferences.Preferences"
+            name="YaScalaDT Preferences">
+      </page>
+      <page
+            category="net.alchim31.yascaladt.preferences.Preferences"
+            class="net_alchim31_yascaladt_preferences.TemplatePreferences"
+            id="net.alchim31.yascaladt.preferences.TemplatePreferences"
+            name="Templates">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="net_alchim31_yascaladt_preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            description="Commands related to the YaScalaDT plugin"
+            id="net.alchim31.yascaladt.commands.category"
+            name="YaScalaDT">
+      </category>
+      <command
+            categoryId="net_alchim31_yascaladt.commands.category"
+            description="Turn comments on/off for a selection"
+            id="net.alchim31.yascaladt.commands.toggleComment"
+            name="Toggle Comment">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               label="YaScalaDT">
+            <command
+                  commandId="net.alchim31.yascaladt.commands.toggleComment"
+                  label="Toggle Comment"
+                  style="push">
+            </command>
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="net.alchim31.yascaladt.editor.SimpleScalaEditor">
+                  </equals>
+               </with>
+            </visibleWhen>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="net_alchim31_yascaladt_handlers.ToggleCommentHandler"
+            commandId="net.alchim31.yascaladt.commands.toggleComment">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="net.alchim31.yascaladt.commands.toggleComment"
+            contextId="net.alchim31.yascaladt.Scope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+Shift+C">
+      </key>
+      <key
+            commandId="net.alchim31.yascaladt.commands.toggleComment"
+            contextId="net.alchim31.yascaladt.Scope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+/">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="net.alchim31.yascaladt.Scope"
+            name="YaScalaDT editor context"
+            parentId="org.eclipse.ui.textEditorScope">
+      </context>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors.templates">
+      <contextType
+            class="net_alchim31_yascaladt_template.MyTemplateContextType"
+            id="net.alchim31.yascaladt.template"
+            name="Scala Context">
+      </contextType>
+      <include
+            file="templates/default-templates.xml">
+      </include>
+   </extension>
+
+</plugin>
