@@ -128,7 +128,7 @@ public class CompilerPatternMatcher implements IPatternMatchListenerDelegate {
             return;
         }
         IFile file = findIFile(info.path);
-        info.newEclipseMarker(file);
+        info.addAsIMarker(file);
         if (file != null && info.hyperlinkLength > 0) {
             IHyperlink link = new FileLink(file, null, -1, -1, info.lineNumber);
             _console.addHyperlink(link, info.hyperlinkBeginAt, info.hyperlinkLength);
@@ -224,9 +224,10 @@ public class CompilerPatternMatcher implements IPatternMatchListenerDelegate {
           columnNumberEnd = i + 1;
       }
 
-      public void newEclipseMarker(IResource back) throws Exception {
-          if (back != null) {
-              IMarker marker = back.createMarker(MARKER_TYPE);
+      public IMarker addAsIMarker(IResource r) throws Exception {
+          IMarker marker = null;
+          if (r != null) {
+              marker = r.createMarker(MARKER_TYPE);
               marker.setAttribute(IMarker.SEVERITY, isError ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING);
               marker.setAttribute("COLUMN_START", columnNumberBegin);
               marker.setAttribute("COLUMN_END", columnNumberEnd);
@@ -234,6 +235,7 @@ public class CompilerPatternMatcher implements IPatternMatchListenerDelegate {
               marker.setAttribute(IMarker.MESSAGE, message);
               marker.setAttribute(IMarker.LOCATION, "line: " + lineNumber + ", column: " + columnNumberBegin);
           }
+          return marker;
       }
     }
 }
