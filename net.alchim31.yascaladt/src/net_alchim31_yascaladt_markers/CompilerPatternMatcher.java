@@ -62,9 +62,18 @@ public class CompilerPatternMatcher implements IPatternMatchListenerDelegate {
             } else if (info.isReset) {
                 _previousMarker = null;
                 removeMarkers(info);
-            } else if (_previousMarker != info) {
-                addMarker(_previousMarker);
-                _previousMarker = info;
+            } else {
+                if (_previousMarker != null && _previousMarker.filled) {
+                    addMarker(_previousMarker);
+                    _previousMarker = null;
+                }
+                if (info != null) {
+                    if (info.filled) {
+                        addMarker(info);
+                    } else {
+                        _previousMarker = info;
+                    }
+                }
             }
         } catch (Exception exc){
             exc.printStackTrace();
@@ -170,6 +179,10 @@ public class CompilerPatternMatcher implements IPatternMatchListenerDelegate {
                         back.hyperlinkBeginAt = lineOffset + matcher.start();
                         back.hyperlinkLength = matcher.end() - matcher.start();
                     }
+                }
+
+                if (back != null && previousMarker != null) {
+                    previousMarker.filled = true;
                 }
             }
 
