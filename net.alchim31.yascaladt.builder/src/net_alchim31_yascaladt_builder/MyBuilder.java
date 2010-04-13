@@ -148,18 +148,15 @@ public class MyBuilder extends IncrementalProjectBuilder {
         _buildConsoleStream.print(str);
         boolean hasNoProblems = true;
         for (LogEvent e : _scs.parse(str)) {
-            System.out.println(e.text);
-            System.out.println(e.file);
             if (e.file != null) {
                 IPath ipath = new Path(e.file.getAbsolutePath());
                 if ("compiling".equalsIgnoreCase(e.text.toString())) {
                     IResource r = wsroot.getContainerForLocation(ipath);
-                    System.out.println("compiling found, apply on : " + r);
                     if (r != null) {
-                        //r.deleteMarkers(MARKER_TYPE, false, IResource.DEPTH_INFINITE);
-                        for(IMarker marker : r.findMarkers(MARKER_TYPE, true, IResource.DEPTH_INFINITE)) {
-                            marker.delete();
-                        }
+                        r.deleteMarkers(MARKER_TYPE, true, IResource.DEPTH_INFINITE);
+//                        for(IMarker marker : r.findMarkers(MARKER_TYPE, true, IResource.DEPTH_INFINITE)) {
+//                            marker.delete();
+//                        }
                     }
                 } else if (e.level != Level.INFO) {
                     IResource  r = wsroot.getFileForLocation(ipath);
