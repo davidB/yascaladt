@@ -202,23 +202,25 @@ public class ScalacsClient {
     public void startNewServer() throws Exception{
         boolean started = false;
 //        _log.info("start scala-tools-server...");
+        String basename = _csArtifactId + "-"+ _csVersion;
         File installDir = new File(System.getProperty("user.home"), ".sbt-launch");
+        File bootstrapJar = installJar(new File(installDir, "sbt-launch-0.7.2.jar"));
+        File bootstrapConf = installConf(new File(installDir, basename +".boot.properties"));
         ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
         ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
         ILaunchConfiguration found = null;
         for (ILaunchConfiguration configuration : manager.getLaunchConfigurations(type)) {
-           if (configuration.getName().equals("Start Scalacs")) {
+           if (configuration.getName().equals("Start " + basename)) {
               //configuration.delete();
               found = configuration;
               break;
            }
         }
         if (found == null) {
-            ILaunchConfigurationWorkingCopy workingCopy = type.newInstance(null, "Start Scalacs");
+            ILaunchConfigurationWorkingCopy workingCopy = type.newInstance(null, "Start " + basename);
             //workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_JRE_CONTAINER_PATH, JavaRuntime.JRE_CONTAINER);
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY, installDir.getCanonicalPath()); //$NON-NLS-1
-            File booststrapFile = installJar(new File(installDir, "sbt-launch-0.7.2.jar"));
-            IRuntimeClasspathEntry bootstrapEntry = JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(booststrapFile.getAbsolutePath()));
+            IRuntimeClasspathEntry bootstrapEntry = JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(bootstrapJar.getAbsolutePath()));
             bootstrapEntry.setClasspathProperty(IRuntimeClasspathEntry.USER_CLASSES);
             IPath systemLibsPath = new Path(JavaRuntime.JRE_CONTAINER);
             IRuntimeClasspathEntry systemLibsEntry = JavaRuntime.newRuntimeContainerClasspathEntry(systemLibsPath, IRuntimeClasspathEntry.STANDARD_CLASSES);
@@ -227,7 +229,7 @@ public class ScalacsClient {
             classpath.add(systemLibsEntry.getMemento());
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
-            workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, "-Dsbt.boot.properties="+ installConf(new File(installDir, _csArtifactId + "-"+ _csVersion +".boot.properties")).getCanonicalPath());
+            workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, "-Dsbt.boot.properties="+ bootstrapConf.getCanonicalPath());
             workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "xsbt.boot.Boot");
             //workingCopy.setAttribute(ATTR_PROGRAM_ARGUMENTS, "start");
             found = workingCopy.doSave();
