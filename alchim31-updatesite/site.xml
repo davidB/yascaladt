@@ -3,5 +3,5 @@
    <description name="Alchim31" url="http://alchim31.net/update-site">
       Update site for eclipse plugins provide by Alchim31
    </description>
-   <feature url="features/net.achim31.yascaladt_0.2.1.201001121859.jar" id="net.achim31.yascaladt" version="0.2.1.201001121859"/>
+   <feature url="features/net.achim31.yascaladt_0.3.0.201004132126.jar" id="net.achim31.yascaladt" version="0.3.0.201004132126"/>
 </site>

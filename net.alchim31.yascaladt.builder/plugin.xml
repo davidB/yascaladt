@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="net.alchim31.yascaladt.builder"
+         name="YaScalaDT Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="net_alchim31_yascaladt_builder.MyBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="net.alchim31.yascaladt.nature"
+         name="YaScalaDT Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="net_alchim31_yascaladt_builder.MyNature">
+         </run>
+      </runtime>
+      <builder id="net.alchim31.yascaladt.builder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="net.alchim31.yascaladt.builder.contribution1">
+         <action
+               label="Add/Remove YaScalaDT Builder"
+               class="net_alchim31_yascaladt_builder.ToggleNatureAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="net.alchim31.yascaladt.builder.addRemoveNatureAction">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         id="net.alchim31.yascaladt.builder.Problem"
+         name="YaScalaDT builder Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="false">
+      </persistent>
+   </extension>
+
+</plugin>
